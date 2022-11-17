@@ -10,16 +10,16 @@ version2=${version%??}
 kubectl delete -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-${version2}/releases/cnpg-${version1}.yaml
 
 # K3d cluster
-k3d cluster delete
-k3d cluster create
+#k3d cluster delete
+#k3d cluster create
 
 #kind cluster
-kind delete cluster
-kind create cluster
+#kind delete cluster
+#kind create cluster
 
-#./docker_pull_images.sh
-./k3d_import_images.sh
-./kind_import_images.sh
+./docker_pull_images.sh
+#./k3d_import_images.sh
+#./kind_import_images.sh
 
 # Stop MinIO
 #ps | grep "start_minio" | grep -v grep | awk '{print $1}' | xargs -I % kill %
