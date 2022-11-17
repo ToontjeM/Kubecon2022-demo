@@ -12,55 +12,80 @@ In this demo I'll show you how to create a Postgres cluster with CloudNativePG k
 - Last CloudNativePG tested version is 1.17.0
 
 # Prerequisites
-- K8s environment (K8s, k3d, kind)
-- Docker
-- Tested with K3d and kind. 
-  - k3d is a lightweight wrapper to run k3s (Rancher Lab’s minimal Kubernetes distribution) in docker.
-  - kind is a tool for running local Kubernetes clusters using Docker container “nodes”.
+- K8s environment
+- Tested with Docker Desktop with Kubernetes on Mac 
 
-# Demo
-Execute commands in the correct order:
-```
-./01_install_plugin.sh
-./02_install_operator.sh
-./03_check_operator_installed.sh
-./04_get_cluster_config_file.sh
-./05_install_cluster.sh
-```
-Open a new session and execute:
-```
-./06_show_status.sh
-```
-Open another session and execute MinIO server (S3 Object Storage compatible):
-Please, check the IP of your computer and replace in file cluster-example-upgrade.yaml.
+## Set up environment
 
-```
-# URL: http://127.0.0.1:9001
-# User: admin
-# Password: password
+1. Set up 3 panes in a vertical layout (Operator, Status and Minio)
+2. Check IP address and enter in `cluster-example-upgrade.yaml`
+3. Run Minio in pane 4 and minimize that pane
+4. Open browser [http://localhost:9001](http://192.168.0.102:9000) - admin / password
+5. (optional) Open VSCode in the `kubecon2022-demo` directory.
 
-./start_minio_docker_server.sh
-```
-Go back to the previous session and execute:
-```
-./07_insert_data.sh
-./08_promote.sh
-./09_upgrade.sh
-./10_backup_cluster.sh
-./11_backup_describe.sh
-./12_restore_cluster.sh
-./13_failover.sh
-```
-# Major upgrade
-Major upgrade feature has been introduced in 1.16 version.
-In this demo I show you how to upgrade your cluster from PosgreSQL v13 to v14.
-```
-./20_create_cluster_v13.sh
-./21_insert_data_cluster_v13.sh
-./22_verify_data_inserted.sh
-./23_upgrade_v13_to_v14.sh
-./24_verify_data_migrated.sh
-```
+## Start demo
+
+1. Run script 01-05 in pane 1.
+2. Run script 06 in pane 3
+3. Point out cluster nodes
+4. Point out Primary instance
+5. Point out Postgres version
+6. Point out WAL file
+7. Run script 07
+    1. Show command
+    2. Point out LSN’s have been updated
+    3. Show `check_data.sh cluster-example` to show 1000 rows.
+
+## Promotion
+
+1. Run script 08
+2. “Going to take -1 down so it will promote -2 to be primary”
+3. Point out on the status screen. Maybe point out in pane 4 with `kubectl get pods`
+
+## In-place version upgrade
+
+1. Run script 09
+2. Explain “We are going to perform an in-place upgrade from 14.2 to 14.5”
+3. Show `cluster-example-upgrade.yaml` (keep it on screen for script 10)
+4. Show status and wait for cluster to get into a healthy state
+
+## Backup & Restore
+
+1. Script 10 (Backup)
+2. Open browser [http://192.168.0.102:9000](http://192.168.0.102:9000) - admin / password
+3. Show backup section in `cluster-sample-upgrade.yaml`
+4. If you want to see what that backup configuration looked like, run script 11 (`kubectl describe backup backup-test`) and focus on “backup completed”.
+5. Script 12 (Restore)
+    1. Show `restore.yaml`
+    2. Run script 12
+    3. Show in a separate pane using `watch -c -n 1 kubectl-cnpg status cluster-restore`
+    4. Show `check_data.sh cluster-example` to contain 1000 rows.
+
+## Failover
+
+1. Script 13 (Failover)
+    1. We are going to force delete a pod and see what happens.
+    2. `kubectl delete pod <primary pod> --force`
+    3. Show in status that cluster is failing over.
+
+## Upgrade across clusters
+
+1. Run vsCode and connect to server
+2. Open script 20 and `cluster-example-13.yaml`
+    1. Emphasise on bootstrap
+3. Insert data using script 21
+    1. Show script
+    2. Show SQL
+4. Run script 22 
+    1. “To make sure that all our data is in there”
+    2. Show script
+    3. Emphasise on SQL
+5. Show script 23
+    1. Show yaml file
+    2. Explain that we are getting the cluster and all its data from the external source cluster.
+    3. Run `kubectl-cnpg status cluster-example-14` or `15`
+6. Show and run script 24 (Validate)
+
 
 To delete your cluster execute:
 ```
@@ -86,3 +111,7 @@ If you want to delete and create your Kind and K3d clusters and pull the Postgre
 ```
 ./get_ip.sh
 ```
+Links
+
+[https://github.com/minio/minio](https://github.com/minio/minio)
+
