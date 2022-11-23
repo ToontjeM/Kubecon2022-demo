@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Delete backup
+kubectl delete backup backup-test
+
+# Delete deployment
+kubectl delete deployments.apps -n cnpg-system cnpg-controller-manager
+
 # Uninstall cluster
 ./delete_all_clusters.sh
 rm cluster-example.yaml
