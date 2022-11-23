@@ -20,7 +20,7 @@ In this demo I'll show you how to create a Postgres cluster with CloudNativePG k
 1. Set up 3 panes in a vertical layout (Operator, Status and Minio)
 2. Check IP address and enter in `cluster-example-upgrade.yaml`
 3. Run Minio in pane 4 and minimize that pane
-4. Open browser [http://localhost:9001](http://192.168.0.102:9000) - admin / password
+4. Open browser [http://localhost:9001](http://localhost:9001) - admin / password
 5. (optional) Open VSCode in the `kubecon2022-demo` directory.
 
 # Start demo
@@ -53,10 +53,11 @@ In this demo I'll show you how to create a Postgres cluster with CloudNativePG k
 ## Backup & Restore
 
 1. Script 10 (Backup)
-2. Open browser [http://<your IP address>:9000](http://<your IP address>:9000) - admin / password
+2. Open browser [http://localhost:9001](http://localhost:9001) - admin / password
 3. Show backup section in `cluster-sample-upgrade.yaml`
 4. If you want to see what that backup configuration looked like, run script 11 (`kubectl describe backup backup-test`) and focus on “backup completed”.
-5. Script 12 (Restore)
+5. Show content of bucket created.
+6. Script 12 (Restore)
     1. Show `restore.yaml`
     2. Run script 12
     3. Show in a separate pane using `watch -c -n 1 kubectl-cnpg status cluster-restore`
@@ -109,3 +110,4 @@ To delete your cluster execute:
 
 [https://github.com/minio/minio](https://github.com/minio/minio)
 
+[https://cloudnative-pg.io](https://cloudnative-pg.io)
