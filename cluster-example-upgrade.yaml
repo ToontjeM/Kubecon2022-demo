@@ -13,7 +13,7 @@ spec:
   backup:
     barmanObjectStore:
       destinationPath: "s3://cnp/"
-      endpointURL: "http://192.168.0.99:9000"
+      endpointURL: "http://100.84.15.48:9000"
       s3Credentials:
         accessKeyId:
           name: minio-creds
