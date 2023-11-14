@@ -1,19 +1,18 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: cluster-example
+  name: mycluster
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:14.5
-  #imagePullPolicy: Never
+  imageName: ghcr.io/cloudnative-pg/postgresql:14.2
 
   storage:
-    size: 2Gi
-
+    size: 1Gi
+   
   backup:
     barmanObjectStore:
       destinationPath: "s3://cnp/"
-      endpointURL: "http://100.84.15.48:9000"
+      endpointURL: "http://192.168.0.35:9000"
       s3Credentials:
         accessKeyId:
           name: minio-creds
